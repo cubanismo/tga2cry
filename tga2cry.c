@@ -210,7 +210,7 @@ main(int argc, char **argv)
 		if (**argv != '-') break;
 		if (!strcmp(*argv, "-binary")) {
 			binary_flag = YES;
-		} else if (!stricmp(*argv, "-quiet")) {
+		} else if (!strcmp(*argv, "-quiet")) {
 			quiet_flag = YES;
 		} else if (!strcmp(*argv, "-dither")) {
 			dither_flag = YES;
