@@ -1,0 +1,24 @@
+tgainfo -- print info about a Targa picture
+-----------------------------------------------
+This program prints information about a 24-bit RGB
+Targa picture file. The default is to print the
+width and height of the picture. If the -colors
+flag is given, the number of distinct colors
+that will appear in the picture when it is displayed
+as 15 bit RGB (5 bits each of red, green, and
+blue) is also given.
+
+Usage:
+
+tgainfo [-colors] inputfilename
+
+
+
+MS-DOS NOTES:
+
+The PC/MSDOS version of TGAINFO is a 32-bit DOS protected mode application.
+The files DPMI32VM.DLL, 32RTM.EXE, CW3211.DLL are part of the Borland
+Powerpack DOS Protected Mode Interface support package, and are copyright
+(c) 1994 Borland International, All rights reserved.  They are distributed
+with permission.
+

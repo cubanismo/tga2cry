@@ -1,0 +1,207 @@
+tga2cry -- Targa to 16-bit CRY or RGB converter
+-----------------------------------------------
+This program converts a 24-bit RGB Targa picture file to an assembly
+language or binary file containing Jaguar CRY or RGB image data.
+
+Usage:
+
+tga2cry [-binary][-dither][-header][-hflip][-varmod][-vflip][-rotate][-nozero][-quiet]
+        [-resize w,h][-filter filt][-aspect]
+	[-stripbits n][-relative n]
+	[-maxcolors n]
+	[-glimit n][-gcolor n]
+	[-f format][-o outfilename] inputfilename
+
+Converts a (24 bit) Targa file to an assembly language or binary file
+containing Jaguar CRY or RGB data. Only 24 bit Targas are understood by
+this program; they may be RLE compressed.
+
+The input file name must be given explicitly. The output file name may
+be given with the "-o" option; if no output file name is given, the
+input file name with the .TGA extension changed to .CRY (for CRY output),
+.RGB (for RGB output) or .MSK (for MSK output) is used.
+
+Other options:
+
+-binary:
+	Output raw binary data, rather than assembly language. Binary
+	data must be included with the -i option of aln.
+
+-dither:
+	Use Floyd-Steinberg dithering during the conversion. This can
+	be useful in reducing the "banding" that can appear in CRY
+	pictures because of the more limited range of colors (as opposed
+	to intensities) that CRY has as compared to RGB; it is also useful
+	for output using the "palette" modes (e.g. cry8 or rgb8) where
+	the small number of colors available (256) can also lead to
+	banding.
+
+-header:
+	Output a header suitable for some texture mapping tools; with this
+	option, the width, height, and flags for the blitter are placed
+	in the first phrase of the data, with the picture data immediately
+	following. (See below for sample output.)
+
+-hflip:
+	Flip the picture horizontally.
+
+-vflip:
+	Flip the picture vertically.
+
+-rotate:
+	Rotate the picture 90 degrees clockwise (i.e. turn it on its side).
+
+-nozero:
+	Only output a 0 pixel (all bits 0) if the input red,green,and blue
+	are all 0 (if red,green,blue are close to zero but not exactly zero,
+	output a pixel with just the low bit set). This is useful for making
+	sure that transparent pictures come out looking right.
+	NOTE: this option does not currently work with palette output formats.
+
+-varmod:
+	Set or clear the lowest bit of 16 bit output data to indicate whether
+	the data is RGB (if set) or CRY (if clear). Useful for the variable
+	color resolution mode.
+
+-quiet:
+	Only output error messages; do not output status reports.
+
+-f format:
+	Controls the format of the data. This must be one of:
+		cry	for 16 bit CRY output data (the default)
+		cry8	for 8 bit per pixel data, with a CRY palette
+			appended
+		cry4	for 4 bit per pixel data, with a CRY palette
+			appended
+		cry1	for 1 bit per pixel data, with a CRY palette
+			appended
+		gray	for 16 bit CRY output data, intensities only
+			this is useful if the same picture is to be
+			output with different CRY colors or'd in to
+			the color byte
+		glass	for 16 bit CRY output data, intensities only,
+			and relative to 128. This is useful for
+			read-modify-write objects (e.g. heads up
+			displays)
+		rgb	for 16 bit RGB output data
+		rgb8	for 8 bit per pixel data, with an RGB palette
+			appended
+		rgb4	for 4 bit per pixel data, with an RGB palette
+			appended
+		rgb1	for 1 bit per pixel data, with an RGB palette
+			appended
+		rgb24	for (Jaguar format) 24 bit RGB data
+		msk	for a 1 bit per pixel mask, with a 1 bit
+			wherever the input has a black pixel and
+			a 0 bit elsewhere; "black" pixels are those
+			with all three of red, green, and blue
+			set to 0
+-resize w,h:
+	Resize the picture to w pixels wide and h pixels high.
+
+The following options control how resizing is done:
+
+-aspect:
+	Preserve aspect ratio. If this option is given, a black border
+	will be added either to the right and left or top and bottom sides
+	of the output, as appropriate, so that the resized picture has
+	the same aspect ratio as the input.
+
+-filter filt:
+	Controls the filter used during resizing. Different filters will
+	give different weight to pixels when blending them; which one
+	will look best generally depends on the input, although there
+	frequently isn't much difference. Filters available are:
+		box	simple box filter; produces noticeable
+			pixellation when scaling up
+		bell	pseudo bell-shaped curve
+		lanc	Lanczos3 filter
+		mitch   Mitchell filter
+		sinc	Sinc function, windowed from -4.0 to 4.0
+		tri	triangle filter
+
+	The Mitchell filter is the default, and usually produces
+	good results.
+
+Options for CRY output:
+
+-stripbits n:
+	Strip the lower n bits of the CRY intensity being output. This
+	generally helps lossless compressors (like gzip or lzss) find
+	more substrings and hence compress better. -stripbits 1 and
+	-stripbits 2 produce output virtually indistinguishable from
+	the default -stripbits 0.
+
+-relative n:
+	Make all intensities signed offsets relative to n. This may
+	be useful for producing shading or stained glass effects with
+	the blitter. (The "-f glass" option is like "-relative 0x80",
+	but also discards color information).
+
+
+Options for gray and glass output:
+
+-glimit n:
+	Make any intensity less than n equal to 0. This is useful for
+	removing anti-aliasing around edges.
+
+-gcolor n:
+	Set the CRY color byte in the output to n, rather than to 0.
+	For example, the combination of -gray -gcolor 0x78 produces
+	a gray scale output that looks like a black and white photo
+	when displayed directly; without the -gcolor 0x78 the output
+	would be various shades of blue (since CRY color 0 is blue).
+
+Options for palette output formats (cry8, cry4, cry1, rgb8, rgb4, rgb1):
+
+-maxcolors n:
+	Use at most n colors out of the palette; useful if several
+	pictures are to share the same palette.
+
+-basecolor n:
+	Add n to all pixel values being output; useful in conjunction
+	with the -maxcolors flag to prepare several pictures that
+	use the same palette.
+
+
+
+Output:
+
+The output data is either mac 68000 assembler (the default) or a raw
+binary file which may be included with mac's .incbin command, or
+aln's -i option. The output has the following format:
+
+header: (optional; only present if -header flag was given)
+	2 words giving the width and then height of the picture
+	1 long giving the blitter flags for texture mapping
+	  (including the XADDINC flag)
+
+picture data:
+	the actual pixels, with 1, 8, 16, or 32 bits per
+	pixel (depending on output format chosen). This will
+	be rounded up to the nearest word size boundary
+	(e.g. a 4x21 1 bit per pixel picture will occupy
+	81 bits; the nearest word boundary is 96 bits, i.e.
+	12 bytes).
+
+palette: (optional, only present if the output format requires it)
+	1 word giving the number of palette entries
+	n words following giving the values to be placed in the
+	  Jaguar CLUT
+
+
+MS-DOS NOTES:
+
+The PC/MSDOS version of TGA2CRY is a 32-bit DOS protected mode application.
+The files DPMI32VM.DLL, 32RTM.EXE, CW3211.DLL are part of the Borland
+Powerpack DOS Protected Mode Interface support package, and are copyright
+(c) 1994 Borland International, All rights reserved.  They are distributed
+with permission.
+
+Because of a bug with the MAKE utility not properly passing commandline
+options to DPMI programs, there is a problem calling TGA2CRY.EXE from
+your MAKEFILE.  To work around this, we have included a batch file named
+MAKECRY.BAT which simply calls TGA2CRY.EXE.  It's simple, and only passes
+the first commandline option, but you can modify it to do more if necessary.
+
+
