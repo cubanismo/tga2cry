@@ -14,10 +14,10 @@ int do_file P_((char *infile, char *outfile));
 void err_eof P_((void));
 void read_row P_((FILE *fhandle, Pixel *place));
 void read_file P_((char *infile));
-void output_word P_((FILE *f, unsigned int w));
-void output_long P_((FILE *f, unsigned long w));
+void output_word P_((FILE *f, uint16_t w));
+void output_long P_((FILE *f, uint32_t w));
 void output_bit P_((FILE *f, int b));
-long wid P_((unsigned int image_w));
+uint32_t wid P_((unsigned int image_w));
 void make_newdata P_((void));
 
 /* filter.c */

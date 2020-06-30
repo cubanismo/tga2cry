@@ -1,14 +1,19 @@
 CFLAGS = -Wall
 OBJ = .o
-OBJS = tga2cry$(OBJ) cry$(OBJ) rgb$(OBJ) scale$(OBJ) palette$(OBJ)
+OBJS2CRY = tga2cry$(OBJ) cry$(OBJ) rgb$(OBJ) scale$(OBJ) palette$(OBJ)
+OBJSINFO = tgainfo$(OBJ)
+OBJS = $(OBJS2CRY) $(OBJSINFO)
 LDFLAGS = -lm
 EXT =
 
-tga2cry$(EXT): $(OBJS)
+all: tga2cry$(EXT) tgainfo$(EXT)
+
+tga2cry$(EXT): $(OBJS2CRY)
 	$(CC) -o tga2cry$(EXT) $(CFLAGS) $(LDFLAGS) $^
 
-#cry$(OBJ): cry.s
-#	$(CC) -o cry$(OBJ) -c cry.s
+tgainfo$(EXT): $(OBJSINFO)
+	$(CC) -o tgainfo$(EXT) $(CFLAGS) $^
 
-tgainfo$(EXT): tgainfo$(OBJ)
-	$(CC) -o tgainfo$(EXT) $(CFLAGS) tgainfo$(OBJ)
+.PHONY: clean
+clean:
+	$(RM) $(OBJS) tga2cry$(EXT) tgainfo$(EXT)

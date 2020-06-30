@@ -40,6 +40,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <inttypes.h>
 #include "tgadefs.h"
 #include "tgaproto.h"
 
@@ -856,7 +857,7 @@ output_byte(FILE *f, unsigned char w)
 }
 
 void
-output_word(FILE *f, unsigned int w)
+output_word(FILE *f, uint16_t w)
 {
 	binary_file_size += 2;
 	if (binary_flag) {
@@ -868,9 +869,9 @@ output_word(FILE *f, unsigned int w)
 		fputc(lo, f);
 	} else {
 		if (items_per_line == 0) {
-			fprintf(f, "\tdc.w\t$%04X", w);
+			fprintf(f, "\tdc.w\t$%04" PRIX16, w);
 		} else {
-			fprintf(f, ",$%04X", w);
+			fprintf(f, ",$%04" PRIX16, w);
 		}
 		if (items_per_line++ == 15) {
 			fputc('\n', f);
@@ -880,25 +881,25 @@ output_word(FILE *f, unsigned int w)
 }
 
 void
-output_long(FILE *f, unsigned long w)
+output_long(FILE *f, uint32_t w)
 {
 	binary_file_size += 4;
 	if (binary_flag) {
 		int lo, hi;
 
-		hi = (w >> 24L);
-		lo = ((w >> 16L) & 0x00ff);
+		hi = (w >> 24);
+		lo = ((w >> 16) & 0x00ff);
 		fputc(hi, f);
 		fputc(lo, f);
-		hi = (w >> 8L) & 0x00ff;
+		hi = (w >> 8) & 0x00ff;
 		lo = w & 0x00ff;
 		fputc(hi, f);
 		fputc(lo, f);
 	} else {
 		if (items_per_line == 0) {
-			fprintf(f, "\tdc.l\t$%08lX", w);
+			fprintf(f, "\tdc.l\t$%08" PRIX32, w);
 		} else {
-			fprintf(f, ",$%08lX", w);
+			fprintf(f, ",$%08" PRIX32, w);
 		}
 		if (items_per_line++ == 7) {
 			fputc('\n', f);
@@ -1176,9 +1177,9 @@ do_rgb16(unsigned char red, unsigned char green, unsigned char blue)
 static INLINE void
 do_rgb24(unsigned char red, unsigned char green, unsigned char blue)
 {
-	unsigned long temp0;
+	uint32_t temp0;
 
-	temp0 = ((long)green << 24L) | ((long)red << 16L) | blue;
+	temp0 = ((uint32_t)green << 24) | ((uint32_t)red << 16) | blue;
 	output_long(outhandle, temp0);
 }
 
@@ -1198,17 +1199,17 @@ do_msk(unsigned char red, unsigned char green, unsigned char blue)
 static INLINE void
 do_palette(unsigned char red, unsigned char green, unsigned char blue, int line, int column)
 {
-	long dist, bestdist;
+	int32_t dist, bestdist;
 	int bestcolor;
 	int i, rdist, bdist, gdist;
 
-	bestdist = 0x7fffffffL;
+	bestdist = 0x7fffffff;
 	bestcolor = 0;
 	for (i = 0; i < num_colors; i++) {
 		rdist = (int)red - (int)palette[i].color.red;
 		gdist = (int)green - (int)palette[i].color.green;
 		bdist = (int)blue - (int)palette[i].color.blue;
-		dist = rdist*(long)rdist+gdist*(long)gdist+bdist*(long)bdist;
+		dist = rdist*(int32_t)rdist+gdist*(int32_t)gdist+bdist*(int32_t)bdist;
 		if (dist <= bestdist) {
 			bestdist = dist;
 			bestcolor = i;
@@ -1240,17 +1241,17 @@ do_palette(unsigned char red, unsigned char green, unsigned char blue, int line,
 static INLINE void
 do_4palette(unsigned char red, unsigned char green, unsigned char blue, int line, int column)
 {
-	long dist, bestdist;
+	int32_t dist, bestdist;
 	int bestcolor;
 	int i, rdist, bdist, gdist;
 
-	bestdist = 0x7fffffffL;
+	bestdist = 0x7fffffff;
 	bestcolor = 0;
 	for (i = 0; i < num_colors; i++) {
 		rdist = (int)red - (int)palette[i].color.red;
 		gdist = (int)green - (int)palette[i].color.green;
 		bdist = (int)blue - (int)palette[i].color.blue;
-		dist = rdist*(long)rdist+gdist*(long)gdist+bdist*(long)bdist;
+		dist = rdist*(int32_t)rdist+gdist*(int32_t)gdist+bdist*(int32_t)bdist;
 		if (dist <= bestdist) {
 			bestdist = dist;
 			bestcolor = i;
@@ -1282,17 +1283,17 @@ do_4palette(unsigned char red, unsigned char green, unsigned char blue, int line
 static INLINE void
 do_1palette(unsigned char red, unsigned char green, unsigned char blue, int line, int column)
 {
-	long dist, bestdist;
+	int32_t dist, bestdist;
 	int bestcolor;
 	int i, rdist, bdist, gdist;
 
-	bestdist = 0x7fffffffL;
+	bestdist = 0x7fffffff;
 	bestcolor = 0;
 	for (i = 0; i < num_colors; i++) {
 		rdist = (int)red - (int)palette[i].color.red;
 		gdist = (int)green - (int)palette[i].color.green;
 		bdist = (int)blue - (int)palette[i].color.blue;
-		dist = rdist*(long)rdist+gdist*(long)gdist+bdist*(long)bdist;
+		dist = rdist*(int32_t)rdist+gdist*(int32_t)gdist+bdist*(int32_t)bdist;
 		if (dist <= bestdist) {
 			bestdist = dist;
 			bestcolor = i;
@@ -1361,7 +1362,7 @@ This is done by a table lookup on "widtab"; each entry in widtab consists
 of two longs, the first being the width as an integer, the second being
 the corresponding blitter bits.
 *************************************************************************/
-static long widtab[] = {
+static uint32_t widtab[] = {
 2,	0x00000800,
 4,	0x00001000,
 6,	0x00001400,
@@ -1404,14 +1405,14 @@ static long widtab[] = {
 0,	0x00000000
 };
 
-long
+uint32_t
 wid(unsigned int image_w)
 {
-	long *ptr;
+	uint32_t *ptr;
 
 	ptr = widtab;
 	while (*ptr != 0) {
-		if (*ptr == (long)image_w) {
+		if (*ptr == (uint32_t)image_w) {
 			return ptr[1];
 		}
 		ptr += 2;		/* skip the image width and blitter bits */
@@ -1440,7 +1441,7 @@ make_newdata()
 	int line,column;
 	long completed;
 	long linelen;
-	long blitflags;
+	uint32_t blitflags;
 	int pixsiz;
 
 	items_per_line = 0;				/* count words per line in new file */
@@ -1477,19 +1478,19 @@ make_newdata()
  */
 	if (data_type == RGB24) {
 		pixsiz = 32;
-		blitflags = 0x00030028L|wid(image_w);		/* PITCH1|PIXEL32|XADDINC|WIDxxx */
+		blitflags = 0x00030028u|wid(image_w);		/* PITCH1|PIXEL32|XADDINC|WIDxxx */
 	} else if (data_type == MSK || data_type == CRY1 || data_type == RGB1 ) {
 		pixsiz = 1;
-		blitflags = 0x00030000L|wid(image_w);		/* PITCH1|PIXEL1|XADDINC|WIDxxx */
+		blitflags = 0x00030000u|wid(image_w);		/* PITCH1|PIXEL1|XADDINC|WIDxxx */
 	} else if (data_type == CRY8 || data_type == RGB8) {
 		pixsiz = 8;
-		blitflags = 0x00030018L|wid(image_w);		/* PITCH1|PIXEL8|XADDINC|WIDxxx */
+		blitflags = 0x00030018u|wid(image_w);		/* PITCH1|PIXEL8|XADDINC|WIDxxx */
 	} else if (data_type == CRY4 || data_type == RGB4) {
 		pixsiz = 4;
-		blitflags = 0x00030010L|wid(image_w);		/* PITCH1|PIXEL4|XADDINC|WIDxxx */
+		blitflags = 0x00030010u|wid(image_w);		/* PITCH1|PIXEL4|XADDINC|WIDxxx */
 	} else {
 		pixsiz = 16;
-		blitflags = 0x00030020L|wid(image_w);		/* PITCH1|PIXEL16|XADDINC|WIDxxx */
+		blitflags = 0x00030020u|wid(image_w);		/* PITCH1|PIXEL16|XADDINC|WIDxxx */
 	}
 
 	if (header_flag) {
@@ -1506,7 +1507,7 @@ make_newdata()
 			fprintf(outhandle, "\t.phrase\n");
 			fprintf(outhandle, "%s:\n", picname);
 			fprintf(outhandle, "\tdc.w\t%d,%d\n",image_w,image_h);
-			fprintf(outhandle, "\tdc.l\t$%08lX\t;(PITCH1|PIXEL%d|WID%d|XADDINC)\n", blitflags, pixsiz, image_w);
+			fprintf(outhandle, "\tdc.l\t$%08" PRIX32 "\t;(PITCH1|PIXEL%d|WID%d|XADDINC)\n", blitflags, pixsiz, image_w);
 		}
 	} else {
 	/* do a plain header */

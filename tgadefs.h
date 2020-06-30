@@ -1,12 +1,14 @@
+#include <stdint.h>
+
 typedef struct {
-	unsigned char red;
-	unsigned char green;
-	unsigned char blue;
+	uint8_t red;
+	uint8_t green;
+	uint8_t blue;
 } Pixel;
 
 typedef struct {
 	Pixel	color;			/* the color of this palette entry */
-	unsigned short outval;		/* the converted (RGB or CRY) value */
+	uint16_t outval;		/* the converted (RGB or CRY) value */
 } Palette_Entry;
 
 typedef struct {

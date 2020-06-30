@@ -36,7 +36,7 @@ do_cry(unsigned char red, unsigned char green, unsigned char blue)
 int
 main()
 {
-	long i;
+	uint32_t i;
 	unsigned char red, green, blue;
 	unsigned int output;
 	FILE *f;
