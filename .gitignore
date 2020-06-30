@@ -1,0 +1,8 @@
+tga2cry
+tga2cry.exe
+tgainfo
+tgainfo.exe
+*.o
+*.obj
+*~
+.*.swp
