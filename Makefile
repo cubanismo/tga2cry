@@ -9,7 +9,7 @@ EXT =
 all: tga2cry$(EXT) tgainfo$(EXT)
 
 tga2cry$(EXT): $(OBJS2CRY)
-	$(CC) -o tga2cry$(EXT) $(CFLAGS) $(LDFLAGS) $^
+	$(CC) -o tga2cry$(EXT) $(CFLAGS) $^ $(LDFLAGS)
 
 tgainfo$(EXT): $(OBJSINFO)
 	$(CC) -o tgainfo$(EXT) $(CFLAGS) $^
