@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdint.h>
 
 extern unsigned char cry[];
 
@@ -40,6 +41,8 @@ main()
 	unsigned char red, green, blue;
 	unsigned int output;
 	FILE *f;
+
+	printf("Create a CRY binary file (cry.bin).\n");
 
 	f = fopen("cry.bin", "wb");
 	for (i = 0; i < 2*32768; i++) {
