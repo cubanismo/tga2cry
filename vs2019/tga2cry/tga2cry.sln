@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30517.126
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "tga2cry", "tga2cry.vcxproj", "{4341D8F7-DAE2-464B-B1E7-44D0B1F216C4}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{4341D8F7-DAE2-464B-B1E7-44D0B1F216C4}.Debug|x64.ActiveCfg = Debug|x64
+		{4341D8F7-DAE2-464B-B1E7-44D0B1F216C4}.Debug|x64.Build.0 = Debug|x64
+		{4341D8F7-DAE2-464B-B1E7-44D0B1F216C4}.Debug|x86.ActiveCfg = Debug|Win32
+		{4341D8F7-DAE2-464B-B1E7-44D0B1F216C4}.Debug|x86.Build.0 = Debug|Win32
+		{4341D8F7-DAE2-464B-B1E7-44D0B1F216C4}.Release|x64.ActiveCfg = Release|x64
+		{4341D8F7-DAE2-464B-B1E7-44D0B1F216C4}.Release|x64.Build.0 = Release|x64
+		{4341D8F7-DAE2-464B-B1E7-44D0B1F216C4}.Release|x86.ActiveCfg = Release|Win32
+		{4341D8F7-DAE2-464B-B1E7-44D0B1F216C4}.Release|x86.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {2CAA25EF-4B66-411F-9DCC-54893DDACCD6}
+	EndGlobalSection
+EndGlobal
