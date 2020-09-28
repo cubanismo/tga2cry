@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 
 typedef unsigned short UWORD;
 typedef unsigned char UBYTE;
@@ -6,7 +7,7 @@ typedef short WORD;
 typedef char BYTE;
 
 UWORD do_cry(int, int, int);
-extern int atoi(char *);
+//extern int atoi(char *);
 extern UBYTE cry[];
 
 int
@@ -14,14 +15,23 @@ main(argc, argv)
 WORD	argc;
 BYTE	*argv[];
 {
-	int red, green, blue;
+	if (argc == 4)
+	{
+		int red, green, blue;
 
-	red = atoi(argv[1]);
-	green = atoi(argv[2]);
-	blue = atoi(argv[3]);
+		red = atoi(argv[1]);
+		green = atoi(argv[2]);
+		blue = atoi(argv[3]);
 
-	printf("%d %d %d rgb is:\t %04x cry\n", red, green, blue, do_cry(red, green, blue));
-	return(0);
+		printf("%d %d %d RGB is:\t 0x%04x CRY\n", red, green, blue, do_cry(red, green, blue));
+		return(0);
+	}
+	else
+	{
+		printf("rgb2cry <red value> <green value> <blue value>\n");
+		printf("Transform a RGB value to a CRY value.\n");
+		return 1;
+	}
 }
 
 
