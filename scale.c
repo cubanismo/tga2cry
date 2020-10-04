@@ -28,11 +28,7 @@
 #endif
 
 #ifndef M_PI
-#ifndef PI
-#define M_PI 3.14159265358979323846
-#else
 #define M_PI PI
-#endif
 #endif
 
 
