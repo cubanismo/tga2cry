@@ -7,7 +7,6 @@ typedef short WORD;
 typedef char BYTE;
 
 UWORD do_cry(int, int, int);
-//extern int atoi(char *);
 extern UBYTE cry[];
 
 int
