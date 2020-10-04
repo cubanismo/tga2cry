@@ -1,6 +1,6 @@
 # TGA, RGB and CRY tools
 A set of tools originaly developed for PC/MSDOS.<br>
-Adapted for Visual Studio 2019 64 bits.
+Adapted for Linux (32/64-bit x86) and Visual Studio 2019 (64-bit x86).
 
 ### docry
 Create a CRY binary file (cry.bin).
