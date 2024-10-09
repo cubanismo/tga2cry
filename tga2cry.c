@@ -5,6 +5,7 @@
  * compiler (e.g. gcc, Borland, Microsoft, or Lattice).
  *
  * History:
+ * 1.16a        Add palette label
  * 1.16		Added -varmod option
  * 1.15		Added -relative option; made blitter width errors into warnings.
  * 1.14		Added -nodata option
@@ -25,7 +26,7 @@
  * 1.1		First command line version
  */
 
-#define VERSION "1.16"
+#define VERSION "1.16a"
 
 #if __MSDOS__
 #define my_malloc(x) farmalloc((long)(x))
@@ -1433,7 +1434,7 @@ wid(unsigned int image_w)
 make_newdata(): here's where the actual TGA to CRY conversion takes
 place
 **************************************************************************/
- 
+
 void
 make_newdata()
 {
@@ -1515,11 +1516,12 @@ make_newdata()
 			binary_file_size = 0;
 		} else {
 			fprintf(outhandle, "\t.globl\t%s\n",picname);
+                        fprintf(outhandle, "%s_width\t.equ %d\n",picname,image_w);
+                        fprintf(outhandle, "%s_height\t.equ %d\n",picname,image_h);
 			if (!nodata_flag)
 				fprintf(outhandle, "\t.data\n");
 			fprintf(outhandle, "\t.phrase\n");
 			fprintf(outhandle, "%s:\n", picname);
-			fprintf(outhandle, ";%d x %d\n",image_w,image_h);
 		}
 	}
 
@@ -1546,6 +1548,8 @@ make_newdata()
 /* now output the palette, if there is one */
 	if (max_colors != 0) {
 		if (!binary_flag) {
+                        fprintf(outhandle, "\t.globl\t%s_palette\n",picname);
+                        fprintf(outhandle, "%s_palette:\n",picname);
 			fprintf(outhandle,"\n;palette data: number of colors, then the palette entries\n");
 		}
 		output_word(outhandle, num_colors);
@@ -1565,4 +1569,3 @@ make_newdata()
 		}
 	}
 }
-
