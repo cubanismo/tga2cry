@@ -35,7 +35,7 @@ double B_spline_filter P_((double t));
 double sinc P_((double x));
 double Lanczos3_filter P_((double t));
 double Mitchell_filter P_((double t));
-void zoom P_((Image *dst, Image *src, double (*filterf )(), double fwidth));
+void zoom P_((Image *dst, Image *src, double (*filterf )(double), double fwidth));
 Pixel *rescale P_((Pixel *oldpix, unsigned old_w, unsigned old_h, unsigned new_w, unsigned new_h, int filter_type, int aspect));
 Pixel *crop P_((Pixel *oldpix, unsigned old_w, unsigned old_h, unsigned new_x, unsigned new_y, unsigned new_w, unsigned new_h));
 

@@ -288,7 +288,7 @@ void
 zoom(dst, src, filterf, fwidth)
 Image *dst;				/* destination image structure */
 Image *src;				/* source image structure */
-double (*filterf)();			/* filter function */
+double (*filterf)(double);	/* filter function */
 double fwidth;				/* filter width (support) */
 {
 	Image *tmp;			/* intermediate image */
@@ -483,7 +483,7 @@ rescale(Pixel *oldpix, unsigned old_w, unsigned old_h, unsigned new_w, unsigned 
 	Pixel *newpix;
 	double delta, fwidth;
 	unsigned vert_border, horiz_border;
-	double (*filterf)();
+	double (*filterf)(double);
 
 	newpix = my_calloc(new_w*(size_t)new_h, sizeof(Pixel));
 	if (!newpix) return 0;
